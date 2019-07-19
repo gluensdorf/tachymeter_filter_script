@@ -3,6 +3,20 @@ Expects data of a tachymeter.
 Holds a set of functions to format the data.
 """
 
+def create_new_list(list_of_data):
+    new_list = list(create_header())
+    size = len(list_of_data)
+    for idx in range(size):
+        if idx == size and size % 2 == 0 or idx == size-1 and size % 2 == 1:
+            return new_list
+    pass
+
+def create_header():
+    #<4 chars>|<12 chars>|<12 chars>| ...
+    header = (f" Nr. |  Hz Lage I | Hz Lage II |  Vt Lage I | Vt Lage II |"
+             f"   S Lage I |  S Lage II |  NP Lage I | NP Lage II ")
+    return header
+
 def split_at_minus_and_plus(list_of_data):
     """
     Splits each value for each element of list_of_data at '+' or '-'.
