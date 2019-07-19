@@ -39,6 +39,9 @@ GON_PRECISION = 5
 DISTANCE_PRECISION = 3
 
 def prepare_data(tachymeter_file):
+    """
+    Loads a file, throws away unwanted data and returns the remaining data.
+    """
     # load file and read it line by line
     with open(tachymeter_file) as f:
         # split each line at " " and store the result in a list
@@ -73,15 +76,10 @@ def start_formatting():
         row_begin = 3,
         row_end = 4 # this will apply X over rows 1 and 2 excluding 3
     )
-    list_of_data = find_pairs.sort_dataset_by_lage(list_of_data)
-    new_list = formatter.create_new_list(list_of_data)
+    new_list = find_pairs.create_sorted_list(list_of_data)
     f = open("test.txt", "w+")
     for ele in new_list:
         f.write(ele + "\n")
-    # sort lines depending on "lage1" or "lage2"
-    # format the values (removing unwanted precision and values[rows])
-    #   also adds a header
-    # some feedback that the process is done and where the file can be found
 
 if __name__ == "__main__":
     start_formatting()
