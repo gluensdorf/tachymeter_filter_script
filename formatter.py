@@ -3,19 +3,52 @@ Expects data of a tachymeter.
 Holds a set of functions to format the data.
 """
 
+import find_pairs
+
 def create_new_list(list_of_data):
-    new_list = list(create_header())
+    new_list = [create_header()]
     size = len(list_of_data)
-    for idx in range(size):
-        if idx == size and size % 2 == 0 or idx == size-1 and size % 2 == 1:
+    dummy = ['', '99999', '99999', '99999', '99999']
+    idx = 0
+    while idx <= size:
+        print(idx)
+        if idx == size-1 and size % 2 == 0 or idx == size-2 and size % 2 == 1:
             return new_list
-    pass
+        elif find_pairs.is_same_target(list_of_data[idx], list_of_data[idx+1]):
+            new_list.append(merge_pair(list_of_data[idx], list_of_data[idx+1]))
+            idx += 1
+            print("increased idx: " + str(idx))
+        # add dummy values if only one Lage was measured
+        else:
+            if list_of_data[idx][2] <= 200:
+                new_list.append(merge_pair(list_of_data[idx], dummy))
+            else:
+                new_list.append(merge_pair(dummy, list_of_data[idx]))
+            pass
+        idx += 1
 
 def create_header():
-    #<4 chars>|<12 chars>|<12 chars>| ...
+    #<5 chars>|<12 chars>|<12 chars>| ...
     header = (f" Nr. |  Hz Lage I | Hz Lage II |  Vt Lage I | Vt Lage II |"
-             f"   S Lage I |  S Lage II |  NP Lage I | NP Lage II ")
+              f"   S Lage I |  S Lage II |  NP Lage I | NP Lage II ")
     return header
+
+def merge_pair(A, B):
+    if A[0] == B[0]:
+        id = A[0]
+    elif A[0] != "" and B[0] == "":
+        id = A[0]
+    elif A[0] == "" and B[0] != "":
+        id = B[0]
+    else:
+        id = "XXX"
+
+    merged = f"{id:^{5}}|"\
+        f"{A[1]:^{12}}|{B[1]:^{12}.{5}}|"\
+        f"{A[2]:^{12}}|{B[2]:^{12}.{5}}|"\
+        f"{A[3]:^{12}}|{B[3]:^{12}.{5}}|"\
+        f"{A[4]:^{12}}|{B[4]:^{12}.{5}}"
+    return merged
 
 def split_at_minus_and_plus(list_of_data):
     """
