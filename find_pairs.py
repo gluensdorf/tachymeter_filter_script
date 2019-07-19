@@ -1,25 +1,67 @@
 """
 Expects data of a Tachymeter.
-Find pairs by comparing their IDs and sort them such that "Lage 1" is before
-"Lage 2".
+Find pairs by comparing their IDs and vertical angle.
+Sorts them such that "Lage 1" is before "Lage 2".
 """
 
-def sort_dataset_by_lage(dataset):
+import math
+
+def create_sorted_list(dataset):
     """
-    Iterates of each entry of dataset and sorts every pair.
+    Iterates over each entry of dataset and sorts every pair.
     """
+    header = f" Nr.; Hz Lage I; Hz Lage II; Vt Lage I; Vt Lage II;"\
+             f" S Lage I; S Lage II; NP Lage I; NP Lage II"
+    dummy = ['', '99999', '99999', '99999', '99999']
+    new_list = [header]
     size = len(dataset)
-    for idx in range(size):
-        if idx == size and size % 2 == 0 or idx == size-1 and size % 2 == 1:
-            return dataset
-        elif is_same_target(dataset[idx], dataset[idx + 1]):
-            lage_1, lage_2 = sort_pair_by_lage(
-                dataset[idx], 
-                dataset[idx + 1]
-                )
-            dataset[idx] = lage_1
-            dataset[idx + 1] = lage_2
-            idx = idx + 1
+    idx = 0
+    nl = '\n'
+    while idx < size:
+        if idx + 1 < size:
+            A = dataset[idx]
+            B = dataset[idx + 1]
+            if math.isclose(A[2] + B[2], 400, rel_tol=1e-04):
+                if A[0] == B[0]:
+                    lage_1, lage_2 = sort_pair_by_lage(A, B)
+                    new_list.append(merge_pair(lage_1, lage_2))
+                    idx += 1 # prevents iterating over B in the next cycle
+                else:
+                    raise ValueError(
+                        f'Vertical angles are close to 400 but IDs are '\
+                        f'different: {nl}'\
+                        f'1. entry: {A[0]}, {A[2]}{nl}'\
+                        f'2. entry: {B[0]}, {B[2]}')
+            else: # A and B are not a pair
+                new_list.append(merge_pair(A, dummy))
+            idx += 1
+        else: # A is the last entry in the dataset and therefore cannot form a pair
+            A = dataset[idx]
+            new_list.append(merge_pair(A, dummy))
+            idx += 1
+    return new_list
+
+def merge_pair(A, B):
+    """
+    Merge values of A and B.
+
+    Returns a string.
+    """
+    if A[0] == B[0]:
+        id = A[0]
+    elif A[0] != "" and B[0] == "":
+        id = A[0]
+    elif A[0] == "" and B[0] != "":
+        id = B[0]
+    else:
+        id = "XXX"
+
+    merged = f"{id};"\
+        f"{A[1]};{B[1]};"\
+        f"{A[2]};{B[2]};"\
+        f"{A[3]};{B[3]};"\
+        f"{A[4]};{B[4]}"
+    return merged
 
 def sort_pair_by_lage(A_candidate, B_candidate):
     """
@@ -34,15 +76,3 @@ def sort_pair_by_lage(A_candidate, B_candidate):
         return (A_candidate, B_candidate)
     else:
         return (B_candidate, A_candidate)
-
-def is_same_target(A_candidate, B_candidate):
-    """
-    Compare IDs to check if A and B are the same target.
-
-    Returns are boolean.
-    """
-
-    if A_candidate[0] == B_candidate[0]:
-        return True
-    else: 
-        return False
