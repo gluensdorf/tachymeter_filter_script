@@ -73,6 +73,7 @@ def start_formatting():
         row_begin = 3,
         row_end = 4 # this will apply X over rows 1 and 2 excluding 3
     )
+    list_of_data = find_pairs.sort_dataset_by_lage(list_of_data)
     pp(list_of_data)
     # sort lines depending on "lage1" or "lage2"
     # format the values (removing unwanted precision and values[rows])
