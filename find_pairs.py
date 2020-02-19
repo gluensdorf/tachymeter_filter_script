@@ -6,6 +6,7 @@ Sorts them such that "Lage 1" is before "Lage 2".
 
 import math
 
+
 def create_sorted_list(dataset):
     """
     Iterates over each entry of dataset and sorts every pair.
@@ -24,22 +25,34 @@ def create_sorted_list(dataset):
             if math.isclose(A[2] + B[2], 400, rel_tol=1e-04):
                 if A[0] == B[0]:
                     lage_1, lage_2 = sort_pair_by_lage(A, B)
+                    # print("Lage 1:")
+                    # print(lage_1)
+                    # print("Lage 2:")
+                    # print(lage_2)
                     new_list.append(merge_pair(lage_1, lage_2))
-                    idx += 1 # prevents iterating over B in the next cycle
+                    # print(merge_pair(lage_1, lage_2))
+                    # print("/////////////////////")
+                    idx += 1  # prevents iterating over B in the next cycle
                 else:
-                    raise ValueError(
+                    # raise ValueError(
+                    print(
                         f'Vertical angles are close to 400 but IDs are '\
                         f'different: {nl}'\
                         f'1. entry: {A[0]}, {A[2]}{nl}'\
                         f'2. entry: {B[0]}, {B[2]}')
+                    print('Assuming they belong to the same point/target.')
+                    lage_1, lage_2 = sort_pair_by_lage(A, B)
+                    new_list.append(merge_pair(lage_1, lage_2))
+                    idx += 1
             else: # A and B are not a pair
                 new_list.append(merge_pair(A, dummy))
             idx += 1
-        else: # A is the last entry in the dataset and therefore cannot form a pair
+        else:  # A is the last entry in the dataset and therefore cannot form a pair
             A = dataset[idx]
             new_list.append(merge_pair(A, dummy))
             idx += 1
     return new_list
+
 
 def merge_pair(A, B):
     """
@@ -63,7 +76,8 @@ def merge_pair(A, B):
         f"{A[4]};{B[4]}"
     return merged
 
-def sort_pair_by_lage(A_candidate, B_candidate):
+
+def sort_pair_by_lage(candidate_a, candidate_b):
     """
     Checks Lage of both candidates and puts Lage 1 before Lage 2.
 
@@ -72,7 +86,7 @@ def sort_pair_by_lage(A_candidate, B_candidate):
     """
     # vertical angle <= 200 means Lage 1 and >= 200 means Lage 2
     # TODO: if both are the same order in a specfic way or does it not matter?
-    if A_candidate[2] <= 200 and B_candidate[2] >= 200:
-        return (A_candidate, B_candidate)
+    if candidate_a[2] <= 200 and candidate_b[2] >= 200:
+        return (candidate_a, candidate_b)
     else:
-        return (B_candidate, A_candidate)
+        return (candidate_b, candidate_a)

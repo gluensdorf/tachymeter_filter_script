@@ -3,6 +3,7 @@ Expects data of a tachymeter.
 Holds a set of functions to format the data.
 """
 
+
 def split_at_minus_and_plus(list_of_data):
     """
     Splits each value for each element of list_of_data at '+' or '-'.
@@ -20,6 +21,7 @@ def split_at_minus_and_plus(list_of_data):
             list_of_data[idx_a][idx_b] = bar[-1]
     return list_of_data
 
+
 def remove_leading_zeros(list_of_data):
     """
     Convert all values to integer else remove leading zeros.
@@ -34,6 +36,7 @@ def remove_leading_zeros(list_of_data):
                 reduced_value = ele_inner.lstrip('0')
             list_of_data[idx_outer][idx_inner] = reduced_value
     return list_of_data
+
 
 def do_X_over_values(list_of_data, X, row_begin, row_end):
     """
