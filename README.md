@@ -1,3 +1,16 @@
+## Creating the virtual environment (Windows10 + VS code )
+- allow execution of scripts:
+
+    `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process`
+- create a virtual environment, e.g. "tachy_gui":
+
+    `py -3 -m venv .tachy_gui`
+- activate the created virtual environment "tachy_gui":
+
+    `.\.tachy_gui\Scripts\activate`
+- update "tachy_gui":
+
+    `python -m pip install -r .\requirements.txt`
 ## Minimal HowTo about creating an executable with a GUI using Python under Windows10
 - PySimpleGui Cookbook
 
