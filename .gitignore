@@ -1,2 +1,5 @@
 /__pycache__/*
 test.txt
+/.tachy_gui/*
+/build/*
+/dist/*
